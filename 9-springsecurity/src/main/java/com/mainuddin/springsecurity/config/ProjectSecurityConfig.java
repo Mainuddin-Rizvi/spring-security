@@ -2,7 +2,10 @@ package com.mainuddin.springsecurity.config;
 
 import com.mainuddin.springsecurity.exceptionhandling.CustomAccessDeniedHandler;
 import com.mainuddin.springsecurity.exceptionhandling.CustomBasicAuthenticationEntryPoint;
+import com.mainuddin.springsecurity.filter.AuthoritiesLoggingAfterFilter;
+import com.mainuddin.springsecurity.filter.AuthoritiesLoggingAtFilter;
 import com.mainuddin.springsecurity.filter.CsrfCookieFilter;
+import com.mainuddin.springsecurity.filter.RequestValidationBeforeFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,12 +51,11 @@ public class ProjectSecurityConfig {
                         .ignoringRequestMatchers( "/contact","/register")
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
+                .addFilterBefore(new RequestValidationBeforeFilter(), BasicAuthenticationFilter.class)
+                .addFilterAfter(new AuthoritiesLoggingAfterFilter(), BasicAuthenticationFilter.class)
+                .addFilterAt(new AuthoritiesLoggingAtFilter(), BasicAuthenticationFilter.class)
                 .requiresChannel(rcc -> rcc.anyRequest().requiresInsecure()) // Only HTTP
                 .authorizeHttpRequests((requests) -> requests
-                        /*.requestMatchers("/myAccount").hasAuthority("VIEWACCOUNT")
-                        .requestMatchers("/myBalance").hasAnyAuthority("VIEWBALANCE", "VIEWACCOUNT")
-                        .requestMatchers("/myLoans").hasAuthority("VIEWLOANS")
-                        .requestMatchers("/myCards").hasAuthority("VIEWCARDS")*/
                         .requestMatchers("/myAccount").hasRole("USER")
                         .requestMatchers("/myBalance").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/myLoans").hasRole("USER")

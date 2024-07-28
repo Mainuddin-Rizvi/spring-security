@@ -20,8 +20,7 @@ public class NoticesController {
 
     @GetMapping("/notices")
     public ResponseEntity<List<Notice>> getNotices() {
-        Date currentDate = new Date(System.currentTimeMillis()); // Get current date
-        List<Notice> notices = noticeRepository.findAllActiveNotices(currentDate);
+        List<Notice> notices = noticeRepository.findAllActiveNotices();
         if (notices != null) {
             return ResponseEntity.ok()
                     .cacheControl(CacheControl.maxAge(60, TimeUnit.SECONDS))

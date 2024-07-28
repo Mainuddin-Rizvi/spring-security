@@ -160,3 +160,30 @@ CREATE TABLE contact_messages (
   message VARCHAR(2000) NOT NULL,
   create_dt DATE DEFAULT NULL
 );
+
+CREATE TABLE authorities (
+  id SERIAL PRIMARY KEY,
+  customer_id INT NOT NULL,
+  name VARCHAR(50) NOT NULL,
+  FOREIGN KEY (customer_id) REFERENCES customer (customer_id)
+);
+
+INSERT INTO authorities (customer_id, name)
+ VALUES (1, 'VIEWACCOUNT');
+
+INSERT INTO authorities (customer_id, name)
+ VALUES (1, 'VIEWCARDS');
+
+INSERT INTO authorities (customer_id, name)
+  VALUES (1, 'VIEWLOANS');
+
+INSERT INTO authorities (customer_id, name)
+  VALUES (1, 'VIEWBALANCE');
+
+DELETE FROM authorities;
+
+INSERT INTO authorities (customer_id, name)
+  VALUES (1, 'ROLE_USER');
+
+INSERT INTO authorities (customer_id, name)
+  VALUES (1, 'ROLE_ADMIN');
